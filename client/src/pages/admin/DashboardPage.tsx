@@ -17,7 +17,7 @@ const DashboardPage: React.FC = () => {
                 <h1 className="text-3xl font-bold">Admin Dashboard</h1>
                 <button
                     onClick={handleLogout}
-                    className="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700"
+                    className="px-4 py-2 text-white bg-orange-500 rounded hover:bg-nexus-blue transition duration-300"
                 >
                     Logout
                 </button>

@@ -14,11 +14,11 @@ const ProductCard = ({ id, name, imageUrl, description }: ProductCardProps) => {
       <div className="p-6">
         <h3 className="text-xl font-bold text-gray-800 mb-2">{name}</h3>
         <p className="text-gray-600 mb-4 truncate">{description}</p>
-        <Link 
-          to={`/produtos/${id}`} 
-          className="inline-block bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300"
+        <Link
+          to={`/produtos/${id}`}
+          className="inline-block bg-orange-500 hover:bg-nexus-blue text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300"
         >
-          Saiba Mais
+          Ver Detalhes
         </Link>
       </div>
     </div>

@@ -102,7 +102,7 @@ const CategoriesPage: React.FC = () => {
                 <h1 className="text-2xl font-bold">Manage Categories</h1>
                 <button 
                     onClick={() => handleOpenModal()} 
-                    className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+                    className="px-4 py-2 text-white bg-orange-500 rounded hover:bg-nexus-blue transition duration-300"
                 >
                     Add New Category
                 </button>

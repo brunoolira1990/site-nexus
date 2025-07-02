@@ -10,6 +10,7 @@ import LoginPage from './pages/admin/LoginPage';
 import DashboardPage from './pages/admin/DashboardPage';
 import CategoriesPage from './pages/admin/CategoriesPage';
 import AdminProductsPage from './pages/admin/ProductsPage';
+import AboutPage from './pages/AboutPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/produtos/:id" element={<ProductDetailPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/contato" element={<ContactPage />} />
+          <Route path="/sobre-nos" element={<AboutPage />} />
         </Route>
 
         {/* Admin Routes */}

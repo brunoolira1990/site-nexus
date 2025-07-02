@@ -1,1 +1,57 @@
 @import "tailwindcss";
+
+/* Estilos personalizados para botões com laranja como padrão e azul no hover */
+.btn-primary,
+.btn,
+button[type="submit"],
+button[type="button"] {
+  background-color: #f97316 !important; /* Laranja */
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-primary:hover,
+.btn:hover,
+button[type="submit"]:hover,
+button[type="button"]:hover {
+  background-color: #325f8c !important; /* Azul Nexus */
+  border-color: #325f8c !important;
+}
+
+/* Estilos específicos para links que funcionam como botões */
+a.btn,
+a[href="#"] {
+  background-color: #f97316 !important; /* Laranja */
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+a.btn:hover,
+a[href="#"]:hover {
+  background-color: #325f8c !important; /* Azul Nexus */
+  border-color: #325f8c !important;
+}
+
+/* Estilos para botões com cores específicas */
+.bg-orange-500 {
+  background-color: #f97316 !important; /* Laranja */
+}
+
+.bg-orange-500:hover,
+.bg-nexus-orange:hover {
+  background-color: #325f8c !important; /* Azul Nexus */
+}
+
+.bg-blue-600:hover,
+.bg-indigo-600:hover {
+  background-color: #325f8c !important; /* Azul Nexus */
+}
+
+/* Estilos para botões de formulário */
+input[type="submit"],
+input[type="button"] {
+  background-color: #f97316 !important; /* Laranja */
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover {
+  background-color: #325f8c !important; /* Azul Nexus */
+}

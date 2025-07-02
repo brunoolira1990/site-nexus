@@ -1,22 +1,43 @@
 import { RequestHandler } from 'express';
 import db from '../config/database';
 
-// GET /api/products - Get all products (can be filtered by category_id)
-export const getAllProducts: RequestHandler = async (req, res) => {
-  const { category_id } = req.query;
-
+// GET /api/products - Lista todos os produtos com paginação e busca
+export const getAllProducts: RequestHandler = async (req, res): Promise<void> => {
   try {
-    let query = db('products');
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const search = (req.query.search as string) || '';
 
-    if (category_id) {
-      query = query.where({ category_id: Number(category_id) });
+    const baseQuery = db('products')
+      .leftJoin('categories', 'products.category_id', 'categories.id')
+      .select(
+        'products.id',
+        'products.name',
+        'products.description',
+        'products.long_description',
+        'products.image_url',
+        'products.specifications',
+        'products.category_id',
+        'categories.name as category_name'
+      );
+
+    if (search) {
+      baseQuery.where('products.name', 'ilike', `%${search}%`);
     }
-    
-    const products = await query.orderBy('name', 'asc');
-    res.json(products);
+
+    const totalQuery = baseQuery.clone().clearSelect().count({ count: '*' }).first();
+    const totalResult = await totalQuery;
+    const total = Number(totalResult?.count || 0);
+
+    const products = await baseQuery
+      .orderBy('products.name', 'asc')
+      .limit(limit)
+      .offset((page - 1) * limit);
+
+    res.json({ products, total });
   } catch (error) {
-    console.error('Error fetching products:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Erro ao buscar produtos:', error);
+    res.status(500).json({ message: 'Erro interno do servidor' });
   }
 };
 
@@ -39,75 +60,66 @@ export const getProductById: RequestHandler = async (req, res) => {
   }
 };
 
-
-// POST /api/products - Create a new product
-export const createProduct: RequestHandler = async (req, res) => {
-  const { name, description, long_description, image_url, category_id, specifications } = req.body;
+// POST /api/products - Cria um novo produto
+export const createProduct: RequestHandler = async (req, res): Promise<void> => {
+  const { name, description, long_description, image_url, specifications, category_id } = req.body;
 
   if (!name || !category_id) {
-    res.status(400).json({ message: 'Product name and category_id are required.' });
+    res.status(400).json({ message: 'Nome e categoria são obrigatórios.' });
     return;
   }
 
   try {
-    const [newProduct] = await db('products').insert({
-      name,
-      description,
-      long_description,
-      image_url,
-      category_id,
-      specifications,
-    }).returning('*');
+    const [newProduct] = await db('products')
+      .insert({ name, description, long_description, image_url, specifications, category_id })
+      .returning('*');
     res.status(201).json(newProduct);
   } catch (error) {
-    console.error('Error creating product:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Erro ao criar produto:', error);
+    res.status(500).json({ message: 'Erro interno do servidor' });
   }
 };
 
-// PUT /api/products/:id - Update a product
-export const updateProduct: RequestHandler = async (req, res) => {
+// PUT /api/products/:id - Atualiza um produto existente
+export const updateProduct: RequestHandler = async (req, res): Promise<void> => {
   const { id } = req.params;
-  const productData = req.body;
+  const { name, description, long_description, image_url, specifications, category_id } = req.body;
 
-  if (!productData.name || !productData.category_id) {
-    res.status(400).json({ message: 'Product name and category_id are required.' });
+  if (!name || !category_id) {
+    res.status(400).json({ message: 'Nome e categoria são obrigatórios.' });
     return;
   }
 
   try {
     const [updatedProduct] = await db('products')
       .where({ id })
-      .update(productData)
+      .update({ name, description, long_description, image_url, specifications, category_id })
       .returning('*');
 
     if (!updatedProduct) {
-      res.status(404).json({ message: 'Product not found.' });
+      res.status(404).json({ message: 'Produto não encontrado.' });
       return;
     }
-    
     res.json(updatedProduct);
   } catch (error) {
-    console.error(`Error updating product ${id}:`, error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Erro ao atualizar produto:', error);
+    res.status(500).json({ message: 'Erro interno do servidor' });
   }
 };
 
-// DELETE /api/products/:id - Delete a product
-export const deleteProduct: RequestHandler = async (req, res) => {
+// DELETE /api/products/:id - Remove um produto
+export const deleteProduct: RequestHandler = async (req, res): Promise<void> => {
   const { id } = req.params;
 
   try {
     const count = await db('products').where({ id }).del();
-    
     if (count === 0) {
-      res.status(404).json({ message: 'Product not found.' });
+      res.status(404).json({ message: 'Produto não encontrado.' });
       return;
     }
-
     res.status(204).send();
   } catch (error) {
-    console.error(`Error deleting product ${id}:`, error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Erro ao deletar produto:', error);
+    res.status(500).json({ message: 'Erro interno do servidor' });
   }
 }; 

@@ -140,7 +140,7 @@ const ProductsPage: React.FC = () => {
             <div className="mb-4">
                 <button 
                     onClick={() => handleOpenModal(null)}
-                    className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+                    className="px-4 py-2 text-white bg-orange-500 rounded hover:bg-nexus-blue transition duration-300"
                 >
                     Add New Product
                 </button>

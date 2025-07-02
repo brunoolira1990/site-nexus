@@ -25,9 +25,10 @@ interface ProductFormProps {
     categories: Category[];
     onSave: (product: ProductSaveData) => void;
     onCancel: () => void;
+    isLoading: boolean;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({ product, categories, onSave, onCancel }) => {
+const ProductForm: React.FC<ProductFormProps> = ({ product, categories, onSave, onCancel, isLoading }) => {
     const [formData, setFormData] = useState<ProductFormData>({
         name: '',
         description: '',
@@ -166,15 +167,20 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories, onSave, 
                     onChange={handleSpecChange}
                     rows={5}
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    placeholder='{ "key": "value" }'
+                    placeholder={`Exemplo produto simples:\n{\n  \"pressao\": \"150#\",\n  \"material\": \"Aço carbono\"\n}\n\nExemplo com variações:\n{\n  \"tamanhos\": {\n    \"1/2\": { \"imagem\": \"url1.jpg\", \"pressao\": \"300#\" },\n    \"3/4\": { \"imagem\": \"url2.jpg\", \"pressao\": \"300#\" }\n  },\n  \"normas\": [\"BS 5351\", \"API 598\"]\n}`}
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  Exemplos:<br/>
+                  <b>Produto simples:</b> <code>{'{ "pressao": "150#", "material": "Aço carbono" }'}</code><br/>
+                  <b>Com variações:</b> <code>{'{ "tamanhos": { "1/2": { "imagem": "url1.jpg" } }, "normas": ["BS 5351"] }'}</code>
+                </p>
             </div>
             <div className="flex justify-end space-x-2">
                 <button type="button" onClick={onCancel} className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">
                     Cancel
                 </button>
-                <button type="submit" className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                    Save
+                <button type="submit" className="px-4 py-2 text-white bg-orange-500 rounded-md hover:bg-nexus-blue transition duration-300">
+                    {isLoading ? 'Saving...' : 'Save Product'}
                 </button>
             </div>
         </form>
